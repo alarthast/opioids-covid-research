@@ -4,12 +4,7 @@
 # repo using a series of actions.
 ######################################
 
-
-expectations:
-
-  population_size: 10000
-
-version: '3.0'
+version: '5.0'
 
 actions:
 
@@ -29,7 +24,7 @@ actions:
 
   # Check missing sex values
   missing:
-    run: r:latest analysis/descriptive/sex_age_missing.R
+    run: r:v1 analysis/descriptive/sex_age_missing.R
     needs: [generate_dataset_missing]
     outputs:
       moderately_sensitive:
@@ -92,7 +87,7 @@ actions:
         
   ## Process time series data - overall prescribing 
   process_ts_overall:
-   run: r:latest analysis/process/process_ts_overall.R
+   run: r:v1 analysis/process/process_ts_overall.R
    needs: [measures_overall]
    outputs:
       moderately_sensitive:
@@ -100,7 +95,7 @@ actions:
  
   ## Process time series data - prescribing by demographics
   process_ts_demo:
-   run: r:latest analysis/process/process_ts_demo.R
+   run: r:v1 analysis/process/process_ts_demo.R
    needs: [measures_demo_prev, measures_demo_new]
    outputs:
       moderately_sensitive:
@@ -108,7 +103,7 @@ actions:
   
   ## Process time series data - prescribing by admin route
   process_ts_type:
-   run: r:latest analysis/process/process_ts_type.R
+   run: r:v1 analysis/process/process_ts_type.R
    needs: [measures_type]
    outputs:
       moderately_sensitive:
@@ -116,7 +111,7 @@ actions:
   
   ## Process time series data - prescribing to people in carehome
   process_ts_carehome:
-   run: r:latest analysis/process/process_ts_carehome.R
+   run: r:v1 analysis/process/process_ts_carehome.R
    needs: [measures_carehome]
    outputs:
       moderately_sensitive:
@@ -124,7 +119,7 @@ actions:
 
   ## Check time series
   figures_ts:
-    run: r:latest analysis/descriptive/ts_figures.R
+    run: r:v1 analysis/descriptive/ts_figures.R
     needs: [process_ts_overall, process_ts_type, process_ts_carehome, process_ts_demo]
     outputs:
       moderately_sensitive:
@@ -132,7 +127,7 @@ actions:
 
   ## Results table 
   table:
-    run: r:latest analysis/descriptive/table_stand.R
+    run: r:v1 analysis/descriptive/table_stand.R
     needs: [generate_dataset_table]
     outputs:
       moderately_sensitive:
