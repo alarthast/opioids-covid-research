@@ -12,3 +12,4 @@ venv/
 .Rproj.user/
 .devcontainer/ehrql-main/
 released_outputs/*
+.env
