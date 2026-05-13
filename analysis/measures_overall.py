@@ -9,7 +9,7 @@
 #####################################################################
 
 from ehrql import months, INTERVAL, Measures
-from ehrql.tables.tpp import patients, practice_registrations
+from ehrql.tables.emisv2 import patients, practice_registrations
 
 
 from dataset_definition import make_dataset_opioids

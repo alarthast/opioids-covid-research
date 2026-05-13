@@ -9,7 +9,7 @@
 
 from ehrql import Dataset
 
-from ehrql.tables.tpp import patients, practice_registrations
+from ehrql.tables.emisv2 import patients, practice_registrations
 
 from dates import index_date
 

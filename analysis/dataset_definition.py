@@ -11,7 +11,7 @@
 
 
 from ehrql import Dataset, years
-from ehrql.tables.tpp import medications, practice_registrations, clinical_events
+from ehrql.tables.emisv2 import medications, practice_registrations, clinical_events
 
 import codelists
 

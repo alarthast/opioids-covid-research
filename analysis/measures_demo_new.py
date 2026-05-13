@@ -8,7 +8,7 @@
 #####################################################################
 
 from ehrql import case, when, months, INTERVAL, Measures
-from ehrql.tables.tpp import (
+from ehrql.tables.emisv2 import (
     patients,
     addresses,
     practice_registrations,
