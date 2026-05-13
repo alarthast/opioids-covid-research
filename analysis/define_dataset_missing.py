@@ -1,17 +1,15 @@
 ###################################################################
 # This script extracts age and sex for FULL cohort (no exclusions)
-#   for quantification of number of people with missing age/sex 
+#   for quantification of number of people with missing age/sex
 #
-# Author: Andrea Schaffer 
+# Author: Andrea Schaffer
 #   Bennett Institute for Applied Data Science
 #   University of Oxford, 2024
 #####################################################################
 
 from ehrql import Dataset
 
-from ehrql.tables.tpp import (
-    patients, 
-    practice_registrations)
+from ehrql.tables.tpp import patients, practice_registrations
 
 dataset = Dataset()
 

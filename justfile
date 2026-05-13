@@ -6,6 +6,7 @@ EHRQL_DIR := "${REPOS_DIR}/ehrql"
 venv:
     test -d .venv/ || uv venv
     uv pip install setuptools
+    uv pip install ruff
 
 build-ehrql-dev-image:
     #!/usr/bin/env bash
@@ -19,4 +20,9 @@ install-opensafely-cli:
     fi
 
 opensafely *args: venv build-ehrql-dev-image install-opensafely-cli
+    #!/usr/bin/env bash
     .venv/bin/opensafely {{ args }}
+
+fix: venv
+    .venv/bin/ruff format .
+    .venv/bin/ruff check --fix .
