@@ -29,7 +29,7 @@ dir_create(here::here("output", "tables"), showWarnings = FALSE, recurse = TRUE)
 dir_create(here::here("output", "processed"), showWarnings = FALSE, recurse = TRUE)
 
 ## Read in data 
-cohort <- read_csv(here::here("output", "data", "dataset_table.csv.gz"))
+cohort <- read_csv(here::here("output", "data", "dataset_table.csv"))
 ons_pop_stand <- read_csv(here::here("ONS-data", "ons_pop_stand.csv"))
 
 # Number check----

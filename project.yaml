@@ -10,17 +10,17 @@ actions:
 
   generate_dataset_table:
     run: ehrql:dev generate-dataset analysis/define_dataset_table.py 
-      --output output/data/dataset_table.csv.gz
+      --output output/data/dataset_table.csv
     outputs:
       highly_sensitive:
-        cohort: output/data/dataset_table.csv.gz  
+        cohort: output/data/dataset_table.csv  
 
   generate_dataset_missing:
     run: ehrql:dev generate-dataset analysis/define_dataset_missing.py 
-      --output output/data/dataset_missing.csv.gz
+      --output output/data/dataset_missing.csv
     outputs:
       highly_sensitive:
-        cohort: output/data/dataset_missing.csv.gz  
+        cohort: output/data/dataset_missing.csv  
 
   # Check missing sex values
   missing:

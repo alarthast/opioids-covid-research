@@ -26,7 +26,7 @@ dir_create(here::here("output", "tables"), showWarnings = FALSE, recurse = TRUE)
 dir_create(here::here("output", "data"), showWarnings = FALSE, recurse = TRUE)
 
 ## Read in data 
-cohort <- read_csv(here::here("output", "data", "dataset_missing.csv.gz")) %>%
+cohort <- read_csv(here::here("output", "data", "dataset_missing.csv")) %>%
   mutate(age_wrong = case_when(
                       (age >= 18 & age <110) ~ "Included", 
                       (age >= 0 & age < 18) ~ "Excluded",
