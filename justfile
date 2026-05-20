@@ -23,6 +23,11 @@ opensafely *args: venv build-ehrql-dev-image install-opensafely-cli
     #!/usr/bin/env bash
     .venv/bin/opensafely {{ args }}
 
+@nuke:
+    rm -rf metadata/ && mkdir metadata
+    rm -rf output/ && mkdir output
+    touch output/.gitkeep
+
 fix: venv
     .venv/bin/ruff format .
     .venv/bin/ruff check --fix .
