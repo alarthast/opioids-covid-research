@@ -9,9 +9,35 @@
 
 
 # --- IMPORT STATEMENTS ---
+import csv
+from pathlib import Path
+
 
 ## Import code building blocks from cohort extractor package
-from ehrql import codelist_from_csv
+def codelist_from_csv(filename, *, column, category_column=None):
+    filename = Path(filename)
+    with filename.open("r") as f:
+        return codelist_from_csv_lines(
+            f, column=column, category_column=category_column
+        )
+
+
+def codelist_from_csv_lines(lines, *, column, category_column=None):
+    if category_column is None:
+        category_column = column
+        return_list = True
+    else:
+        return_list = False
+    # Using `restval=""` ensures we never get None instead of string, so we can always
+    # call `.strip()` without blowing up
+    reader = csv.DictReader(iter(lines), restval="")
+    code_map = {row[column].strip(): row[category_column].strip() for row in reader}
+    # Discard any empty codes
+    code_map.pop("", None)
+    if return_list:
+        return list(code_map)
+    else:
+        return code_map
 
 
 # --- CODELISTS ---
