@@ -1,5 +1,5 @@
 ######################################
-# This script defines the project pipeline - 
+# This script defines the project pipeline -
 # it specifies the execution orders for all the code in this
 # repo using a series of actions.
 ######################################
@@ -9,18 +9,18 @@ version: '5.0'
 actions:
 
   generate_dataset_table:
-    run: ehrql:dev generate-dataset analysis/define_dataset_table.py 
+    run: ehrql:dev generate-dataset analysis/define_dataset_table.py
       --output output/data/dataset_table.csv
     outputs:
       highly_sensitive:
-        cohort: output/data/dataset_table.csv  
+        cohort: output/data/dataset_table.csv
 
   generate_dataset_missing:
-    run: ehrql:dev generate-dataset analysis/define_dataset_missing.py 
+    run: ehrql:dev generate-dataset analysis/define_dataset_missing.py
       --output output/data/dataset_missing.csv
     outputs:
       highly_sensitive:
-        cohort: output/data/dataset_missing.csv  
+        cohort: output/data/dataset_missing.csv
 
   # Check missing sex values
   missing:
@@ -32,7 +32,7 @@ actions:
 
   # Measures - prevalent and new prescribing - overall
   measures_overall:
-    run: ehrql:dev generate-measures analysis/measures_overall.py 
+    run: ehrql:dev generate-measures analysis/measures_overall.py
       --output output/measures/measures_overall.csv
       --
       --start-date "2018-01-01"
@@ -43,7 +43,7 @@ actions:
 
   # Measures - prevalent prescribing - by demographic categories
   measures_demo_prev:
-    run: ehrql:dev generate-measures analysis/measures_demo_prev.py 
+    run: ehrql:dev generate-measures analysis/measures_demo_prev.py
       --output output/measures/measures_demo_prev.csv
       --
       --start-date "2018-01-01"
@@ -51,10 +51,10 @@ actions:
     outputs:
       moderately_sensitive:
         measure_csv: output/measures/measures_demo_prev.csv
-  
+
   # Measures - new prescribing - by demographic categories
   measures_demo_new:
-    run: ehrql:dev generate-measures analysis/measures_demo_new.py 
+    run: ehrql:dev generate-measures analysis/measures_demo_new.py
       --output output/measures/measures_demo_new.csv
       --
       --start-date "2018-01-01"
@@ -65,18 +65,18 @@ actions:
 
   # Measures - prevalent prescribing - by opioid type
   measures_type:
-    run: ehrql:dev generate-measures analysis/measures_type.py 
+    run: ehrql:dev generate-measures analysis/measures_type.py
       --output output/measures/measures_type.csv
       --
       --start-date "2018-01-01"
       --intervals 54
     outputs:
       moderately_sensitive:
-        measure_csv: output/measures/measures_type.csv 
+        measure_csv: output/measures/measures_type.csv
 
   # Measures - prevalent and new prescribing - in people in care home
   measures_carehome:
-    run: ehrql:dev generate-measures analysis/measures_carehome.py 
+    run: ehrql:dev generate-measures analysis/measures_carehome.py
       --output output/measures/measures_carehome.csv
       --
       --start-date "2018-01-01"
@@ -84,15 +84,15 @@ actions:
     outputs:
       moderately_sensitive:
         measure_csv: output/measures/measures_carehome.csv
-        
-  ## Process time series data - overall prescribing 
+
+  ## Process time series data - overall prescribing
   process_ts_overall:
    run: r:v1 analysis/process/process_ts_overall.R
    needs: [measures_overall]
    outputs:
       moderately_sensitive:
         timeseries_csv: output/timeseries/ts_overall*.csv
- 
+
   ## Process time series data - prescribing by demographics
   process_ts_demo:
    run: r:v1 analysis/process/process_ts_demo.R
@@ -100,7 +100,7 @@ actions:
    outputs:
       moderately_sensitive:
         timeseries_csv: output/timeseries/ts_demo*.csv
-  
+
   ## Process time series data - prescribing by admin route
   process_ts_type:
    run: r:v1 analysis/process/process_ts_type.R
@@ -108,7 +108,7 @@ actions:
    outputs:
       moderately_sensitive:
         timeseries_csv: output/timeseries/ts_type*.csv
-  
+
   ## Process time series data - prescribing to people in carehome
   process_ts_carehome:
    run: r:v1 analysis/process/process_ts_carehome.R
@@ -125,7 +125,7 @@ actions:
       moderately_sensitive:
         plots: output/descriptive/ts_plot*.png
 
-  ## Results table 
+  ## Results table
   table:
     run: r:v1 analysis/descriptive/table_stand.R
     needs: [generate_dataset_table]
