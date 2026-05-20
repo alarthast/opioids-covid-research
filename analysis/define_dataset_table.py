@@ -20,22 +20,23 @@ from ehrql.tables.tpp import (
 import codelists
 
 from dataset_definition import make_dataset_opioids
+from dates import index_date, end_date
 
-dataset = make_dataset_opioids(index_date="2022-04-01", end_date="2022-06-30")
+dataset = make_dataset_opioids(index_date=index_date, end_date=end_date)
 
 # Define population #
 dataset.define_population(
-    (patients.age_on("2022-04-01") >= 18)
-    & (patients.age_on("2022-04-01") < 110)
+    (patients.age_on(index_date) >= 18)
+    & (patients.age_on(index_date) < 110)
     & ((patients.sex == "male") | (patients.sex == "female"))
-    & (patients.date_of_death.is_after("2022-04-01") | patients.date_of_death.is_null())
-    & (practice_registrations.for_patient_on("2022-04-01").exists_for_patient())
+    & (patients.date_of_death.is_after(index_date) | patients.date_of_death.is_null())
+    & (practice_registrations.for_patient_on(index_date).exists_for_patient())
 )
 
 # Demographics #
 
 # Age
-age = patients.age_on("2022-04-01")
+age = patients.age_on(index_date)
 dataset.age_group = case(
     when(age < 30).then("18-29"),
     when(age < 40).then("30-39"),
@@ -72,7 +73,7 @@ dataset.age_stand = case(
 dataset.sex = patients.sex
 
 # IMD decile
-imd = addresses.for_patient_on("2022-04-01").imd_rounded
+imd = addresses.for_patient_on(index_date).imd_rounded
 dataset.imd10 = case(
     when((imd >= 0) & (imd < int(32844 * 1 / 10))).then("1 (most deprived)"),
     when(imd < int(32844 * 2 / 10)).then("2"),
@@ -92,7 +93,7 @@ ethnicity16 = (
     clinical_events.where(
         clinical_events.snomedct_code.is_in(codelists.ethnicity_codes_16)
     )
-    .where(clinical_events.date.is_on_or_before("2022-04-01"))
+    .where(clinical_events.date.is_on_or_before(index_date))
     .sort_by(clinical_events.date)
     .last_for_patient()
     .snomedct_code.to_category(codelists.ethnicity_codes_16)
@@ -123,7 +124,7 @@ ethnicity6 = (
     clinical_events.where(
         clinical_events.snomedct_code.is_in(codelists.ethnicity_codes_6)
     )
-    .where(clinical_events.date.is_on_or_before("2022-04-01"))
+    .where(clinical_events.date.is_on_or_before(index_date))
     .sort_by(clinical_events.date)
     .last_for_patient()
     .snomedct_code.to_category(codelists.ethnicity_codes_6)
@@ -141,7 +142,7 @@ dataset.ethnicity6 = case(
 
 # Practice region
 dataset.region = practice_registrations.for_patient_on(
-    "2022-04-01"
+    index_date
 ).practice_nuts1_region_name
 
 # In care home based on primis codes/TPP address match
@@ -149,11 +150,11 @@ carehome_primis = (
     clinical_events.where(
         clinical_events.snomedct_code.is_in(codelists.carehome_primis_codes)
     )
-    .where(clinical_events.date.is_on_or_before("2022-04-01"))
+    .where(clinical_events.date.is_on_or_before(index_date))
     .exists_for_patient()
 )
 
-carehome_tpp = addresses.for_patient_on("2022-04-01").care_home_is_potential_match
+carehome_tpp = addresses.for_patient_on(index_date).care_home_is_potential_match
 
 dataset.carehome = case(
     when(carehome_primis).then(True), when(carehome_tpp).then(True), otherwise=False

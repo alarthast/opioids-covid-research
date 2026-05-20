@@ -11,16 +11,18 @@ from ehrql import Dataset
 
 from ehrql.tables.tpp import patients, practice_registrations
 
+from dates import index_date
+
 dataset = Dataset()
 
 dataset.sex = patients.sex
 
-dataset.age = patients.age_on("2022-04-01")
+dataset.age = patients.age_on(index_date)
 
 # Define population #
 dataset.define_population(
-    (patients.date_of_death.is_after("2022-04-01") | patients.date_of_death.is_null())
-    & (practice_registrations.for_patient_on("2022-04-01").exists_for_patient())
+    (patients.date_of_death.is_after(index_date) | patients.date_of_death.is_null())
+    & (practice_registrations.for_patient_on(index_date).exists_for_patient())
 )
 
 
