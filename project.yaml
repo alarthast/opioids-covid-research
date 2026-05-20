@@ -10,7 +10,17 @@ actions:
 
   generate_dataset_table:
     run: ehrql:dev generate-dataset analysis/define_dataset_table.py
-      --output output/data/dataset_table.csv
+      --output output/data/dataset_table_no_region.csv
+    outputs:
+      highly_sensitive:
+        cohort: output/data/dataset_table_no_region.csv
+
+  map_dataset_table:
+    run: python:v2 analysis/map_region.py
+      --file-type dataset
+      --src-path output/data/dataset_table_no_region.csv
+      --dest-path output/data/dataset_table.csv
+    needs: [generate_dataset_table]
     outputs:
       highly_sensitive:
         cohort: output/data/dataset_table.csv
@@ -44,10 +54,20 @@ actions:
   # Measures - prevalent prescribing - by demographic categories
   measures_demo_prev:
     run: ehrql:dev generate-measures analysis/measures_demo_prev.py
-      --output output/measures/measures_demo_prev.csv
+      --output output/measures/measures_demo_prev_no_region.csv
       --
       --start-date "2018-01-01"
       --intervals 54
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_demo_prev_no_region.csv
+
+  map_measures_demo_prev:
+    run: python:v2 analysis/map_region.py
+      --file-type measure
+      --src-path output/measures/measures_demo_prev_no_region.csv
+      --dest-path output/measures/measures_demo_prev.csv
+    needs: [measures_demo_prev]
     outputs:
       moderately_sensitive:
         measure_csv: output/measures/measures_demo_prev.csv
@@ -55,10 +75,20 @@ actions:
   # Measures - new prescribing - by demographic categories
   measures_demo_new:
     run: ehrql:dev generate-measures analysis/measures_demo_new.py
-      --output output/measures/measures_demo_new.csv
+      --output output/measures/measures_demo_new_no_region.csv
       --
       --start-date "2018-01-01"
       --intervals 54
+    outputs:
+      highly_sensitive:
+        measure_csv: output/measures/measures_demo_new_no_region.csv
+
+  map_measures_demo_new:
+    run: python:v2 analysis/map_region.py
+      --file-type measure
+      --src-path output/measures/measures_demo_new_no_region.csv
+      --dest-path output/measures/measures_demo_new.csv
+    needs: [measures_demo_new]
     outputs:
       moderately_sensitive:
         measure_csv: output/measures/measures_demo_new.csv
@@ -96,7 +126,7 @@ actions:
   ## Process time series data - prescribing by demographics
   process_ts_demo:
    run: r:v1 analysis/process/process_ts_demo.R
-   needs: [measures_demo_prev, measures_demo_new]
+   needs: [map_measures_demo_prev, map_measures_demo_new]
    outputs:
       moderately_sensitive:
         timeseries_csv: output/timeseries/ts_demo*.csv
@@ -128,7 +158,7 @@ actions:
   ## Results table
   table:
     run: r:v1 analysis/descriptive/table_stand.R
-    needs: [generate_dataset_table]
+    needs: [map_dataset_table]
     outputs:
       moderately_sensitive:
         table: output/tables/table_*.csv

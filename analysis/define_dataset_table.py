@@ -140,10 +140,8 @@ dataset.ethnicity6 = case(
     otherwise="Unknown",
 )
 
-# Practice region
-dataset.region = practice_registrations.for_patient_on(
-    index_date
-).practice_nuts1_region_name
+# Address msoa code for region
+dataset.msoa_code = addresses.for_patient_on(index_date).msoa_code
 
 # In care home based on primis codes
 carehome_primis = (

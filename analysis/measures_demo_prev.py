@@ -92,7 +92,7 @@ ethnicity6 = case(
     otherwise="Unknown",
 )
 
-region = practice_registrations.for_patient_on(index_date).practice_nuts1_region_name
+msoa_code = addresses.for_patient_on(index_date).msoa_code
 
 
 #########################
@@ -133,7 +133,7 @@ measures.define_measure(
     name="opioid_any_region",
     numerator=dataset.opioid_any,
     denominator=denominator,
-    group_by={"region": region},
+    group_by={"msoa_code": msoa_code},
 )
 
 measures.define_measure(
