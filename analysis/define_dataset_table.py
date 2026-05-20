@@ -145,7 +145,7 @@ dataset.region = practice_registrations.for_patient_on(
     index_date
 ).practice_nuts1_region_name
 
-# In care home based on primis codes/TPP address match
+# In care home based on primis codes
 carehome_primis = (
     clinical_events.where(
         clinical_events.snomedct_code.is_in(codelists.carehome_primis_codes)
@@ -154,11 +154,7 @@ carehome_primis = (
     .exists_for_patient()
 )
 
-carehome_tpp = addresses.for_patient_on(index_date).care_home_is_potential_match
-
-dataset.carehome = case(
-    when(carehome_primis).then(True), when(carehome_tpp).then(True), otherwise=False
-)
+dataset.carehome = carehome_primis
 
 
 ##############################################

@@ -10,7 +10,6 @@
 from ehrql import case, when, months, INTERVAL, Measures
 from ehrql.tables.emisv2 import (
     patients,
-    addresses,
     practice_registrations,
     clinical_events,
 )
@@ -52,11 +51,7 @@ carehome_primis = (
     .exists_for_patient()
 )
 
-carehome_tpp = addresses.for_patient_on(index_date).care_home_is_potential_match
-
-carehome = case(
-    when(carehome_primis).then(True), when(carehome_tpp).then(True), otherwise=False
-)
+carehome = carehome_primis
 
 age = patients.age_on(index_date)
 age_group = case(
