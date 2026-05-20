@@ -13,3 +13,4 @@ venv/
 .devcontainer/ehrql-main/
 released_outputs/*
 .env
+analysis/fudge_codelists.py
